@@ -91,7 +91,7 @@ export const sendOtpService = async (email) => {
             otpExpireAt
         });
 
-        sendMail({
+        await sendMail({
             to: email,
             subject: 'Your One-Time Password (OTP)',
             html: `
@@ -179,10 +179,13 @@ export const sendOtpService = async (email) => {
 
         return {
             success: true,
-            message: "OTP has been sent."
+            message: "OTP has been sent to your email. Please check your inbox or spam folder."
         }
 
     } catch (error) {
+        console.error('❌ OTP Service Error:', error.message);
+        console.error('Email Config - EMAIL:', process.env.EMAIL ? '✓ Set' : '✗ NOT SET');
+        console.error('Email Config - PASSWORD:', process.env.PASSWORD ? '✓ Set' : '✗ NOT SET');
         return {
             success: false,
             message: error.message
