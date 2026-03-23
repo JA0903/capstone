@@ -10,7 +10,7 @@ import {
 
 } from 'recharts';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { fetchJobsByIndustry } from '../services/reportsDataService';
 
 export default function JobsByIndustryComponent() {
     const [data, setData] = useState([]);
@@ -22,55 +22,21 @@ export default function JobsByIndustryComponent() {
             try {
                 setLoading(true);
                 setError(null);
-                const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
                 
-                const [jobsRes, companiesRes] = await Promise.all([
-                    axios.get(`${API_URL}/api/job/readAll`, { withCredentials: true }),
-                    axios.get(`${API_URL}/api/company/fetchAll`, { withCredentials: true })
-                ]);
+                const result = await fetchJobsByIndustry();
 
-                const jobs = jobsRes.data.jobs || [];
-                const companies = companiesRes.data.companies || [];
-
-                console.log('Jobs fetched:', jobs.length);
-                console.log('Companies fetched:', companies.length);
-
-                if (!companies || companies.length === 0) {
-                    setError('No companies available');
-                    setData([]);
-                    setLoading(false);
-                    return;
+                if (!result.success) {
+                    throw new Error(result.message || 'Failed to fetch jobs');
                 }
 
-                // If no jobs, that's ok - just show companies with 0 jobs
-                if (!jobs || jobs.length === 0) {
+                if (!result.data || result.data.length === 0) {
                     console.warn('No jobs found in database');
-                }
-
-                // Count jobs per company (all jobs)
-                const jobsByCompany = {};
-                companies.forEach(company => {
-                    const jobCount = jobs.filter(job => job.companyId === company.id).length;
-                    if (jobCount > 0) {
-                        jobsByCompany[company.companyName] = jobCount;
-                    }
-                });
-
-                const chartData = Object.entries(jobsByCompany)
-                    .map(([company, activeJobs]) => ({
-                        industry: company,
-                        activeJobs
-                    }))
-                    .sort((a, b) => b.activeJobs - a.activeJobs)
-                    .slice(0, 10);
-
-                if (chartData.length === 0) {
                     setData([]);
                     setLoading(false);
                     return;
                 }
 
-                setData(chartData);
+                setData(result.data);
             } catch (error) {
                 console.error('Error fetching jobs by industry:', error);
                 setError(error.message);

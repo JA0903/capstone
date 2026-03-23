@@ -8,6 +8,7 @@ import ApplicantStatusDistributionComponent from "../components/ApplicantStatusD
 import TopPerformingCompaniesComponent from "../components/TopPerformingCompaniesComponents";
 import { fetchAllSelectCompany } from "../services/companyServices";
 import { exportReportToDocx } from "../services/reportsServices";
+import { fetchReportMetrics } from "../services/reportsDataService";
 import { useState, useEffect } from "react";
 import Select from "../components/ui/Select";
 import { toast } from "react-toastify";
@@ -18,6 +19,16 @@ export default function Reports() {
     const [company, setCompany] = useState('');
     const [selectCompanies, setSelectCompanies] = useState([]);
     const [isExporting, setIsExporting] = useState(false);
+    const [metrics, setMetrics] = useState({
+        totalApplications: 0,
+        totalHires: 0,
+        activeCompanies: 0,
+        attritionRate: 0,
+        conversionRate: 0,
+        interviewSuccessRate: 0,
+        avgTimeToHire: 0
+    });
+    const [metricsLoading, setMetricsLoading] = useState(true);
     const { isConnected, notifications } = useSocket();
 
     useEffect(() => {
@@ -32,6 +43,25 @@ export default function Reports() {
         };
         runFetchAllCompany();
     }, [])
+
+    useEffect(() => {
+        const loadMetrics = async () => {
+            try {
+                setMetricsLoading(true);
+                const result = await fetchReportMetrics(company || null);
+                if (result.success) {
+                    setMetrics(result.metrics);
+                } else {
+                    console.error('Failed to load metrics:', result.message);
+                }
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            } finally {
+                setMetricsLoading(false);
+            }
+        };
+        loadMetrics();
+    }, [company])
 
     const handleExportDocx = async () => {
         setIsExporting(true);
@@ -120,9 +150,9 @@ export default function Reports() {
                                 <p className="font-semibold text-sm">Total Hires</p>
                                 <Users size={16} className="text-emerald-500 shrink-0" />
                             </div>
-                            <p className="font-bold text-2xl mb-2">89</p>
+                            <p className="font-bold text-2xl mb-2">{metrics.totalHires}</p>
                             <p className="flex gap-2 text-xs items-center"><TrendingUp size={12} className="text-emerald-500" />
-                                <span className="text-emerald-500">+18.2%</span> from last period
+                                <span className="text-emerald-500">Conversion: {metrics.conversionRate}%</span>
                             </p>
                         </div>
                         <div className="border border-gray-300 px-4 py-6 rounded-xl">
@@ -130,9 +160,9 @@ export default function Reports() {
                                 <p className="font-semibold text-sm">Total Applications</p>
                                 <Briefcase size={16} className="text-emerald-500 shrink-0" />
                             </div>
-                            <p className="font-bold text-2xl">2847</p>
+                            <p className="font-bold text-2xl">{metrics.totalApplications}</p>
                             <p className="flex gap-2 text-xs items-center"><TrendingUp size={12} className="text-emerald-500" />
-                                <span className="text-emerald-500">+24.5%</span> from last period
+                                <span className="text-emerald-500">+{metrics.conversionRate}%</span> conversion
                             </p>
                         </div>
                         <div className="border border-gray-300 px-4 py-6 rounded-xl">
@@ -140,9 +170,9 @@ export default function Reports() {
                                 <p className="font-semibold text-sm">Active Companies</p>
                                 <Building2 size={16} className="text-emerald-500 shrink-0" />
                             </div>
-                            <p className="font-bold text-2xl">47</p>
+                            <p className="font-bold text-2xl">{metrics.activeCompanies}</p>
                             <p className="flex gap-2 text-xs items-center"><TrendingUp size={12} className="text-emerald-500" />
-                                <span className="text-emerald-500">+6.8%</span> from last period
+                                <span className="text-emerald-500">Hiring</span>
                             </p>
                         </div>
                         <div className="border border-gray-300 px-4 py-6 rounded-xl">
@@ -150,9 +180,9 @@ export default function Reports() {
                                 <p className="font-semibold text-sm">Attrition Rate</p>
                                 <TrendingDown size={16} className="text-emerald-500 shrink-0" />
                             </div>
-                            <p className="font-bold text-2xl">12.5%</p>
-                            <p className="flex gap-2 text-xs items-center"><TrendingDown size={12} className="text-red-500" />
-                                <span className="text-red-500">-4.3%</span> from last period
+                            <p className="font-bold text-2xl">{metrics.attritionRate}%</p>
+                            <p className="flex gap-2 text-xs items-center"><TrendingDown size={12} className={metrics.attritionRate > 10 ? "text-red-500" : "text-emerald-500"} />
+                                <span className={metrics.attritionRate > 10 ? "text-red-500" : "text-emerald-500"}>{metrics.attritionRate > 10 ? "Higher" : "Lower"} than avg</span>
                             </p>
                         </div>
                     </section>
@@ -197,22 +227,22 @@ export default function Reports() {
 
                     <section className="grid lg:grid-cols-3 gap-4">
                         <div className="border border-gray-300 p-4 rounded-xl">
-                            <p className="font-semibold">Top Performing Companies</p>
-                            <p className="text-gray-500 mb-4">Companies with highest hiring activity</p>
-                            <p className="font-bold text-3xl text-emerald-500 mb-2">37.9%</p>
-                            <p className="text-gray-500 mb-4">383 hires from 1,010 applications</p>
+                            <p className="font-semibold">Conversion Rate</p>
+                            <p className="text-gray-500 mb-4">Applications to hires</p>
+                            <p className="font-bold text-3xl text-emerald-500 mb-2">{metrics.conversionRate}%</p>
+                            <p className="text-gray-500 mb-4">{metrics.totalHires} hires from {metrics.totalApplications} applications</p>
                         </div>
                         <div className="border border-gray-300 p-4 rounded-xl">
                             <p className="font-semibold">Avg. Time to Hire</p>
-                            <p className="text-gray-500 mb-4">From application to offer</p>
-                            <p className="font-bold text-3xl text-emerald-500 mb-2">18 days</p>
-                            <p className="text-gray-500 mb-4">3 days faster than last period</p>
+                            <p className="text-gray-500 mb-4">Average hiring duration</p>
+                            <p className="font-bold text-3xl text-emerald-500 mb-2">{metrics.avgTimeToHire} days</p>
+                            <p className="text-gray-500 mb-4">Based on {metrics.totalHires} recent hires</p>
                         </div>
                         <div className="border border-gray-300 p-4 rounded-xl">
                             <p className="font-semibold">Interview Success Rate</p>
-                            <p className="text-gray-500 mb-4">Interviews to hires</p>
-                            <p className="font-bold text-3xl text-emerald-500 mb-2">64.2%</p>
-                            <p className="text-gray-500 mb-4">383 hires from 596 interviews</p>
+                            <p className="text-gray-500 mb-4">Interviews resulting in hires</p>
+                            <p className="font-bold text-3xl text-emerald-500 mb-2">{metrics.interviewSuccessRate}%</p>
+                            <p className="text-gray-500 mb-4">Successfully moving to next stage</p>
                         </div>
                     </section>
                 </div>
