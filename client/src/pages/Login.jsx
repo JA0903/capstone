@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "../hooks/form";
 import { fetchUser, handleLogin } from "../services/authServices";
+import { sendOtp } from "../services/otpServices";
 import { useContext } from "react";
 import { UserContext } from "../context/AuthProvider";
 import Input from "../components/ui/Input";
@@ -38,14 +39,16 @@ export default function Login() {
 
             setIsLoading(true);
             const { success, message } = await handleLogin(formData);
+            
             if (success) {
-                const result = await fetchUser();
-                if (result) {
-                    setUser(result);
-                    setIsLoading(false);
-                    navigate('/dashboard');
+                // Send OTP to user's email
+                const otpResult = await sendOtp({ email: formData.email });
+                
+                if (otpResult.success) {
+                    // Redirect to OTP verification page
+                    navigate('/verify-otp', { state: { email: formData.email } });
                 } else {
-                    setErrorMessage('Failed to fetch user information. Please try again.');
+                    setErrorMessage(otpResult.message || 'Failed to send OTP. Please try again.');
                     setIsLoading(false);
                 }
             } else {

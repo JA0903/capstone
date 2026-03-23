@@ -5,6 +5,7 @@ import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import Profile from "./pages/Profile"
+import OtpVerification from "./pages/OtpVerification"
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
       <Route path="/jobposting" element={<JobPosting />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/verify-otp" element={<OtpVerification />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/home" replace />} />
