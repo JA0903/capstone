@@ -1,0 +1,26 @@
+{
+  "name": "capstone",
+  "version": "1.0.0",
+  "description": "Capstone Hiring Management System",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run admin\" \"npm run client\" \"node startup.js\"",
+    "server": "npm run server --prefix server",
+    "admin": "npm run dev --prefix admin",
+    "client": "npm run dev --prefix client",
+    "start": "npm run dev",
+    "seed": "node server/seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "keywords": [
+    "hiring",
+    "capstone",
+    "hr",
+    "management"
+  ],
+  "author": "",
+  "license": "ISC"
+}
