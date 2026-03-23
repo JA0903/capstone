@@ -15,10 +15,13 @@ import axios from 'axios';
 export default function JobsByIndustryComponent() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchJobsByCompany = async () => {
             try {
+                setLoading(true);
+                setError(null);
                 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
                 
                 const [jobsRes, companiesRes] = await Promise.all([
@@ -28,6 +31,10 @@ export default function JobsByIndustryComponent() {
 
                 const jobs = jobsRes.data.jobs || [];
                 const companies = companiesRes.data.companies || [];
+
+                if (!jobs || jobs.length === 0 || !companies || companies.length === 0) {
+                    throw new Error('No jobs or companies data available');
+                }
 
                 // Count jobs per company
                 const jobsByCompany = {};
@@ -46,9 +53,14 @@ export default function JobsByIndustryComponent() {
                     .sort((a, b) => b.activeJobs - a.activeJobs)
                     .slice(0, 10);
 
+                if (chartData.length === 0) {
+                    throw new Error('No active jobs found');
+                }
+
                 setData(chartData);
             } catch (error) {
                 console.error('Error fetching jobs by industry:', error);
+                setError(error.message);
                 setData([]);
             } finally {
                 setLoading(false);
@@ -60,11 +72,25 @@ export default function JobsByIndustryComponent() {
 
     if (loading) {
         return (
-            <ResponsiveContainer width="100%" height="100%">
-                <div className="flex items-center justify-center h-full">
-                    <span>Loading...</span>
-                </div>
-            </ResponsiveContainer>
+            <div className="flex items-center justify-center h-full w-full">
+                <span>Loading...</span>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-full w-full">
+                <span className="text-red-500">Error: {error}</span>
+            </div>
+        );
+    }
+
+    if (!data || data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full w-full">
+                <span className="text-gray-500">No data available</span>
+            </div>
         );
     }
 

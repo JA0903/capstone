@@ -15,11 +15,18 @@ import { fetchAllApplicants } from '../services/applicants';
 export default function AttritionRateTrendComponent() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchAttritionData = async () => {
             try {
+                setLoading(true);
+                setError(null);
                 const response = await fetchAllApplicants();
+
+                if (!response.success) {
+                    throw new Error(response.message || 'Failed to fetch data');
+                }
 
                 const applicants = response.applicants || [];
                 const attritionData = {};
@@ -63,6 +70,7 @@ export default function AttritionRateTrendComponent() {
                 setData(chartData);
             } catch (error) {
                 console.error('Error fetching attrition data:', error);
+                setError(error.message);
                 setData([]);
             } finally {
                 setLoading(false);
@@ -74,11 +82,25 @@ export default function AttritionRateTrendComponent() {
 
     if (loading) {
         return (
-            <ResponsiveContainer width="100%" height="100%">
-                <div className="flex items-center justify-center h-full">
-                    <span>Loading...</span>
-                </div>
-            </ResponsiveContainer>
+            <div className="flex items-center justify-center h-full w-full">
+                <span>Loading...</span>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-full w-full">
+                <span className="text-red-500">Error: {error}</span>
+            </div>
+        );
+    }
+
+    if (!data || data.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full w-full">
+                <span className="text-gray-500">No data available</span>
+            </div>
         );
     }
 
