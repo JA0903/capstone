@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
 
 // Fetch comprehensive report data connected to database
-export const fetchReportMetrics = async (companyId = null) => {
+export const fetchReportMetrics = async (companyId = null, selectedMonth = null) => {
     try {
         // Fetch all applicants and jobs in parallel
         const [applicantsRes, jobsRes, companiesRes] = await Promise.all([
@@ -26,6 +26,15 @@ export const fetchReportMetrics = async (companyId = null) => {
                 .filter(job => job.company?.id == companyId)
                 .map(job => job.id);
             applicants = applicants.filter(app => companyJobIds.includes(app.job?.id));
+        }
+
+        // Filter by month if specified (format: YYYY-MM)
+        if (selectedMonth) {
+            applicants = applicants.filter(app => {
+                const createdDate = new Date(app.createdAt);
+                const appMonth = createdDate.toISOString().slice(0, 7); // Format: YYYY-MM
+                return appMonth === selectedMonth;
+            });
         }
 
         // Calculate metrics

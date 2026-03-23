@@ -19,6 +19,7 @@ export default function Reports() {
     const [company, setCompany] = useState('');
     const [selectCompanies, setSelectCompanies] = useState([]);
     const [isExporting, setIsExporting] = useState(false);
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // Format: YYYY-MM
     const [metrics, setMetrics] = useState({
         totalApplications: 0,
         totalHires: 0,
@@ -48,7 +49,7 @@ export default function Reports() {
         const loadMetrics = async () => {
             try {
                 setMetricsLoading(true);
-                const result = await fetchReportMetrics(company || null);
+                const result = await fetchReportMetrics(company || null, selectedMonth);
                 if (result.success) {
                     setMetrics(result.metrics);
                 } else {
@@ -61,7 +62,7 @@ export default function Reports() {
             }
         };
         loadMetrics();
-    }, [company])
+    }, [company, selectedMonth])
 
     const handleExportDocx = async () => {
         setIsExporting(true);
@@ -131,16 +132,12 @@ export default function Reports() {
                                 onChange={(e) => setCompany(e.target.value)}
                             />
 
-                            <select
-                                name="industry"
+                            <input
+                                type="month"
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
                                 className="select grow"
-                            >
-                                <option value="30">Last 30 Days</option>
-                                <option value="90">Last 90 Days</option>
-                                <option value="180">Last 180 Days</option>
-                                <option value="365">Last 365 Days</option>
-                                <option value="All Time">All Time</option>
-                            </select>
+                            />
                         </div>
                     </section>
 
