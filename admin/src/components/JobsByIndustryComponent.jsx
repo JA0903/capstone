@@ -32,14 +32,25 @@ export default function JobsByIndustryComponent() {
                 const jobs = jobsRes.data.jobs || [];
                 const companies = companiesRes.data.companies || [];
 
-                if (!jobs || jobs.length === 0 || !companies || companies.length === 0) {
-                    throw new Error('No jobs or companies data available');
+                console.log('Jobs fetched:', jobs.length);
+                console.log('Companies fetched:', companies.length);
+
+                if (!companies || companies.length === 0) {
+                    setError('No companies available');
+                    setData([]);
+                    setLoading(false);
+                    return;
                 }
 
-                // Count jobs per company
+                // If no jobs, that's ok - just show companies with 0 jobs
+                if (!jobs || jobs.length === 0) {
+                    console.warn('No jobs found in database');
+                }
+
+                // Count jobs per company (all jobs)
                 const jobsByCompany = {};
                 companies.forEach(company => {
-                    const jobCount = jobs.filter(job => job.companyId === company.id && job.status === 'open').length;
+                    const jobCount = jobs.filter(job => job.companyId === company.id).length;
                     if (jobCount > 0) {
                         jobsByCompany[company.companyName] = jobCount;
                     }
@@ -54,7 +65,9 @@ export default function JobsByIndustryComponent() {
                     .slice(0, 10);
 
                 if (chartData.length === 0) {
-                    throw new Error('No active jobs found');
+                    setData([]);
+                    setLoading(false);
+                    return;
                 }
 
                 setData(chartData);
