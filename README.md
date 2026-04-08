@@ -234,11 +234,28 @@ After running the project for the first time, two default accounts are automatic
 - **Password:** `Client@12345`
 - **Login URL:** http://localhost:5173
 
+## ✨ Latest Features & Updates
+
+### Recent Enhancements (April 2026)
+- 🎬 **Smooth Job Details Animation** - Job descriptions slide in smoothly with emerald-green frame border
+- 🔄 **Auto-Refresh Profile** - Profile updates reflect immediately without manual page refresh
+- 📍 **CALABARZON Filtering** - All jobs filtered to Cavite & Laguna region only
+- 💫 **Smart Dropdowns** - Click outside to close dropdowns automatically
+- 🌱 **20 Real Companies** - 20 major CALABARZON employers with real job positions
+- 📊 **20 Job Postings** - Diverse roles across manufacturing, IT, finance, healthcare, and more
+
 ## 📖 Quick Features Guide
 
 ### For Job Seekers (Client)
-1. **Apply for Jobs**
-   - Browse jobs at http://localhost:5173
+1. **Browse CALABARZON Jobs**
+   - Visit http://localhost:5173 to see all available jobs
+   - Jobs are filtered to **CALABARZON region only** (Cavite & Laguna)
+   - Search by job title, company, or location
+   - View detailed job descriptions with smooth animations
+   - Job details panel slides in from the right with emerald-green frame
+
+2. **Apply for Jobs**
+   - Click on any job from the list
    - Click "Apply Now" on any job
    - Upload resume (PDF, DOCX, or DOC format)
    - Maximum file size: 5MB
@@ -247,27 +264,45 @@ After running the project for the first time, two default accounts are automatic
    - Click the bookmark icon to save/unsave jobs
    - Saved jobs persist in your profile
 
-3. **Track Applications**
+3. **Update Profile**
+   - Edit profile information and upload resume
+   - Profile automatically refreshes after successful update
+   - Changes reflected immediately without manual refresh
+
+4. **Track Applications**
    - Go to Dashboard to view recent applications
    - Click on any application to see full details
    - Monitor status changes in real-time
 
 ### For Admins (Admin Dashboard)
-1. **View Applicant Pipeline**
+1. **Manage Companies**
+   - View all 20 CALABARZON companies in the Companies section
+   - See active job count for each company
+   - Add, edit, or delete companies
+   - Filter by industry type
+
+2. **Manage Jobs**
+   - Post and manage job openings
+   - All jobs default to CALABARZON region
+   - Set employment type: Full-Time, Part-Time, Contract, Internship
+   - Add job descriptions, responsibilities, and requirements
+   - View applications for each job posting
+
+3. **View Applicant Pipeline**
    - Go to Applicants → http://localhost:5174/applicants
    - See applicants organized in Kanban columns (New → Interview → Orientation)
    - Click three-dots menu → "View Details" to see full applicant profile
 
-2. **Check Applicant Details**
+4. **Check Applicant Details**
    - View contact info, resume, LinkedIn, portfolio
    - Download candidate resumes
    - See interview and orientation history
 
-3. **Generate Reports**
+5. **Generate Reports**
    - Go to Reports → http://localhost:5174/reports
    - Select company (optional)
-   - Click "Export Docx" to download professional report
-   - Includes hiring metrics and analytics
+   - View hiring analytics and trends by company
+   - Export reports in DOCX format
 
 ## �💾 Database Setup
 
@@ -283,8 +318,28 @@ When `SEED_DATA=true` in the server `.env`, the project automatically:
    - Email: `client@capstone.com`
    - Password: `Client@12345`
    - Role: `Job Seeker`
-4. Creates 2 sample companies
-5. Creates 10 sample job postings
+4. Creates **20 real CALABARZON companies** (Cavite & Laguna locations)
+5. Creates **20 real job postings** across multiple industries
+
+### Seed CALABARZON Companies & Jobs
+
+To manually seed 20 companies and 20 jobs for CALABARZON region:
+
+```bash
+cd server
+node seedCompaniesJobs.js
+```
+
+**Companies Included (Sample):**
+Nissan Manufacturing, Nestlé Philippines, San Miguel Corporation, Jollibee Foods, TechNova Solutions, BDO Unibank, Medicard Philippines, Landbank, De La Salle University, Robinsons Land, HP Philippines, Allianz PNB Life, and 8 more major employers
+
+**Job Titles Available:**
+Software Engineer, Mechanical Engineer, Production Manager, IT Support, Nurse, Financial Analyst, Marketing Manager, QA Engineer, HR Officer, Sales Executive, Data Analyst, Supply Chain Coordinator, Customer Service Rep, Project Manager, Accountant, System Administrator, Operations Officer, Graphic Designer, Business Development Manager, and more
+
+**Key Features:**
+- All positions in CALABARZON region (Cavite & Laguna only)
+- Full-Time, Part-Time, Contract, and Internship positions
+- Idempotent seeding: Safe to run multiple times, won't create duplicates
 
 ### Manual Database Reset
 
