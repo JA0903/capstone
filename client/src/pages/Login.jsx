@@ -41,14 +41,13 @@ export default function Login() {
             const { success, message } = await handleLogin(formData);
             
             if (success) {
-                // Send OTP to user's email
-                const otpResult = await sendOtp({ email: formData.email });
-                
-                if (otpResult.success) {
-                    // Redirect to OTP verification page
-                    navigate('/verify-otp', { state: { email: formData.email } });
+                // Fetch user data and go to dashboard
+                const user = await fetchUser();
+                if (user) {
+                    setUser(user);
+                    navigate('/dashboard');
                 } else {
-                    setErrorMessage(otpResult.message || 'Failed to send OTP. Please try again.');
+                    setErrorMessage('Failed to fetch user data');
                     setIsLoading(false);
                 }
             } else {

@@ -30,7 +30,7 @@ export const otpVerifyController = async (req, res) => {
 // SEND OTP 
 export const sendOtpController = async (req, res) => {
     try {
-        const email = req.body;
+        const { email } = req.body;
         console.log(email);
         const result = await sendOtpService(email);
 

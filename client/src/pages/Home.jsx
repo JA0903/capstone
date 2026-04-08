@@ -1,8 +1,8 @@
-import { ArrowRight, MapPin, Search, Shield, Target, TrendingUp, Users, Zap } from "lucide-react";
+import { ArrowRight, MapPin, Search, Shield, Target, TrendingUp, Users, Zap, X } from "lucide-react";
 import Topbar from "../components/Topbar";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { locations } from "../utils/locations";
 import { readJobPosting } from "../services/jobServices";
 
@@ -14,15 +14,36 @@ export default function Home() {
     const [showJobDropdown, setShowJobDropdown] = useState(false);
     const [allJobs, setAllJobs] = useState([]);
     const [filteredJobsDropdown, setFilteredJobsDropdown] = useState([]);
+    const searchContainerRef = useRef(null);
 
-    // Fetch all jobs on component mount
+    // Handle click outside to close dropdowns
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+                setShowCityDropdown(false);
+                setShowJobDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Fetch all jobs on component mount - Filter to CALABARZON only
     useEffect(() => {
         const fetchJobs = async () => {
             try {
                 const { success, jobs } = await readJobPosting();
                 if (success && jobs) {
+                    // Filter jobs to only CALABARZON (Cavite and Laguna)
+                    const calabarzonJobs = jobs.filter(job => 
+                        job?.company?.location?.includes('Cavite') || 
+                        job?.company?.location?.includes('Laguna') ||
+                        job?.location?.includes('Cavite') ||
+                        job?.location?.includes('Laguna')
+                    );
                     // Get unique job titles
-                    const uniqueJobs = [...new Set(jobs.map(job => job.jobTitle))];
+                    const uniqueJobs = [...new Set(calabarzonJobs.map(job => job.jobTitle))];
                     setAllJobs(uniqueJobs);
                 }
             } catch (error) {
@@ -141,7 +162,7 @@ export default function Home() {
                             Connect with top companies and discover opportunities that match your skills. Your next career move starts here.
                         </p>
 
-                        <div className="bg-white p-2 rounded-2xl">
+                        <div className="bg-white p-2 rounded-2xl" ref={searchContainerRef}>
                             <div className="relative">
                                 <div className="flex items-center px-2 mb-2">
                                     <Search className="text-gray-500" />
@@ -153,6 +174,14 @@ export default function Home() {
                                         onFocus={() => setShowJobDropdown(true)}
                                         className="w-full px-4 py-2 outline-0"
                                     />
+                                    {searchJob && (
+                                        <button 
+                                            onClick={() => setSearchJob('')}
+                                            className="text-gray-400 hover:text-gray-600"
+                                        >
+                                            <X size={18} />
+                                        </button>
+                                    )}
                                 </div>
                                 {showJobDropdown && (
                                     <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 max-h-64 overflow-y-auto z-50 shadow-lg">
@@ -191,11 +220,22 @@ export default function Home() {
                                         onFocus={() => setShowCityDropdown(true)}
                                         className="w-full px-4 py-2 outline-0"
                                     />
+                                    {searchCity && (
+                                        <button 
+                                            onClick={() => setSearchCity('')}
+                                            className="text-gray-400 hover:text-gray-600"
+                                        >
+                                            <X size={18} />
+                                        </button>
+                                    )}
                                 </div>
                                 {showCityDropdown && (
                                     <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 max-h-64 overflow-y-auto z-50 shadow-lg">
                                         {locations
-                                            .filter(loc => loc.name.toLowerCase().includes(searchCity.toLowerCase()))
+                                            .filter(loc => 
+                                                loc.region === 'CALABARZON' &&
+                                                loc.name.toLowerCase().includes(searchCity.toLowerCase())
+                                            )
                                             .map(location => (
                                                 <div
                                                     key={location.id}

@@ -298,9 +298,7 @@ export const userUpdateService = async (userId, fullname, phone) => {
 
         if (
             isNaN(userId) ||
-            !fullname ||
-            !phone
-
+            !fullname
         ) {
             return { success: false, message: "Please complete all required fields." };
         }
@@ -313,7 +311,7 @@ export const userUpdateService = async (userId, fullname, phone) => {
 
         if (formattedFullname.length < 4) return { success: false, message: "fullname should have atleast 4 character." };
 
-        if (!isValidPHPhone(phone)) return { success: false, message: "Phone number is not valid." };
+        if (phone && !isValidPHPhone(phone)) return { success: false, message: "Phone number is not valid." };
 
         user.fullname = fullname || null;
         user.phone = phone || null;

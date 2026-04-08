@@ -1,0 +1,492 @@
+/* ===== SMOOTH TRANSITIONS & ANIMATIONS FOR ADMIN ===== */
+
+/* Global Transitions - More Aggressive */
+* {
+    transition: all 0.3s ease !important;
+}
+
+/* Button Transitions */
+button, 
+.btn,
+[role="button"],
+button.bg-emerald-500,
+button.btn-ghost,
+button.btn-square {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:hover, 
+.btn:hover,
+[role="button"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+button:active, 
+.btn:active,
+[role="button"]:active {
+    transform: translateY(0) !important;
+}
+
+/* Input Transitions */
+input, 
+textarea, 
+select,
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+    transition: all 0.3s ease !important;
+    border-color: #e5e7eb !important;
+}
+
+input:focus, 
+textarea:focus, 
+select:focus,
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Table Transitions */
+table {
+    transition: all 0.3s ease !important;
+}
+
+tbody tr,
+table tr {
+    transition: all 0.2s ease !important;
+}
+
+tbody tr:hover,
+table tr:hover {
+    background-color: #f0fdf4 !important;
+    transform: scale(1.002) !important;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2) !important;
+}
+
+td {
+    transition: all 0.2s ease !important;
+}
+
+/* Dropdown Transitions */
+[role="listbox"],
+[role="menu"],
+.dropdown,
+.select-dropdown {
+    animation: slideDown 0.3s ease !important;
+    transform-origin: top !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0 !important;
+        transform: translateY(-10px) !important;
+    }
+    to {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+}
+
+/* Modal/Dialog Transitions */
+[role="dialog"],
+.modal,
+.dialog {
+    animation: fadeInScale 0.3s ease !important;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0 !important;
+        transform: scale(0.95) !important;
+    }
+    to {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+}
+
+/* Modal Backdrop */
+[role="dialog"]::backdrop,
+.modal-backdrop {
+    animation: fadeIn 0.3s ease !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0 !important;
+    }
+    to {
+        opacity: 1 !important;
+    }
+}
+
+/* Card/Section Transitions */
+.card,
+section,
+.border.border-gray-300,
+div.border.border-gray-300,
+.rounded-xl.border,
+.rounded-lg.border {
+    transition: all 0.3s ease !important;
+}
+
+.card:hover,
+section:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Sidebar Transitions */
+[role="navigation"],
+.sidebar,
+.sidemenu {
+    transition: all 0.3s ease !important;
+}
+
+.sidebar a,
+.sidemenu a {
+    transition: all 0.2s ease !important;
+}
+
+.sidebar a:hover,
+.sidemenu a:hover {
+    background-color: #ecfdf5 !important;
+    color: #10b981 !important;
+    padding-left: 24px !important;
+}
+
+/* Topbar Transitions */
+.topbar,
+header {
+    transition: all 0.3s ease;
+}
+
+/* Link Transitions */
+a {
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #10b981;
+    text-decoration: underline;
+}
+
+/* Text & Content Transitions */
+p, h1, h2, h3, h4, h5, h6 {
+    transition: all 0.3s ease;
+}
+
+/* Badge/Status Transitions */
+.badge,
+[role="status"] {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Status colors with smooth transitions */
+.status-open {
+    background-color: #ecfdf5;
+    color: #059669;
+    transition: all 0.3s ease;
+}
+
+.status-closed {
+    background-color: #fee2e2;
+    color: #dc2626;
+    transition: all 0.3s ease;
+}
+
+.status-pending {
+    background-color: #fefce8;
+    color: #ca8a04;
+    transition: all 0.3s ease;
+}
+
+/* Loading Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading,
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Pulse Animation for notifications */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Toast Notification Transitions */
+.toast,
+.notification {
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast.exit,
+.notification.exit {
+    animation: slideOutRight 0.3s ease forwards;
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+/* Page Transition */
+[role="main"],
+.page,
+.content {
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Transform on click */
+button:active {
+    animation: click 0.2s ease;
+}
+
+@keyframes click {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Smooth color transitions */
+.bg-emerald-500,
+.text-emerald-500,
+.border-emerald-500 {
+    transition: all 0.3s ease;
+}
+
+/* Disabled state transitions */
+button:disabled,
+input:disabled,
+select:disabled {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    cursor: not-allowed;
+}
+
+/* Success/Error/Warning state animations */
+.success {
+    animation: slideInDown 0.3s ease;
+    background-color: #dcfce7;
+    border-color: #22c55e;
+}
+
+.error,
+.danger {
+    animation: shake 0.4s ease;
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
+
+.warning {
+    animation: slideInDown 0.3s ease;
+    background-color: #fefce8;
+    border-color: #eab308;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Smooth opacity transitions */
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Smooth height transitions */
+.expand,
+.collapse {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Smooth transform transitions */
+.slide-left {
+    animation: slideLeft 0.3s ease;
+}
+
+@keyframes slideLeft {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.slide-right {
+    animation: slideRight 0.3s ease;
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Menu rotation transitions */
+.menu-icon {
+    transition: transform 0.3s ease;
+}
+
+.menu-icon.open {
+    transform: rotate(90deg);
+}
+
+/* Dropdown chevron rotation */
+.chevron-rotate {
+    transition: transform 0.3s ease;
+}
+
+.chevron-rotate.open {
+    transform: rotate(180deg);
+}
+
+/* Backdrop blur transitions */
+.backdrop-blur {
+    transition: backdrop-filter 0.3s ease;
+}
+
+/* Hover gradient effect */
+.hover-gradient:hover {
+    background: linear-gradient(135deg, #10b981, #059669);
+    transition: all 0.3s ease;
+}
+
+/* Smooth box-shadow transitions */
+.shadow-transition {
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-transition:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth border transitions */
+.border-transition {
+    transition: border-color 0.3s ease;
+}
+
+/* Icon transitions */
+svg,
+.icon {
+    transition: all 0.3s ease;
+}
+
+button:hover svg,
+a:hover svg {
+    color: #10b981;
+}
+
+/* Row selection animation */
+tr.selected {
+    animation: highlight 0.3s ease;
+}
+
+@keyframes highlight {
+    from {
+        background-color: transparent;
+    }
+    to {
+        background-color: #ecfdf5;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

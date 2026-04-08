@@ -74,17 +74,7 @@ export default function JobPosting() {
             filtered = filtered.filter(job => job?.industry === industry);
         }
 
-        // Prioritize Cavite and Laguna
-        const caviteLaguna = filtered.filter(job =>
-            job?.company?.location?.includes('Cavite') || 
-            job?.company?.location?.includes('Laguna')
-        );
-        const others = filtered.filter(job =>
-            !job?.company?.location?.includes('Cavite') && 
-            !job?.company?.location?.includes('Laguna')
-        );
-
-        setFilteredJobs([...caviteLaguna, ...others]);
+        setFilteredJobs(filtered);
     }, [jobs, toSearch, location, type, industry]);
 
     useEffect(() => {
@@ -92,9 +82,16 @@ export default function JobPosting() {
             const readJobs = async () => {
                 const { success, jobs, message } = await readJobPosting();
                 if (success) {
-                    setJobs(jobs);
-                    // Extract unique job titles
-                    const titles = [...new Set(jobs.map(job => job?.jobTitle))].filter(Boolean);
+                    // Filter to only CALABARZON jobs (Cavite and Laguna)
+                    const calabarzonJobs = jobs.filter(job =>
+                        job?.company?.location?.includes('Cavite') || 
+                        job?.company?.location?.includes('Laguna') ||
+                        job?.location?.includes('Cavite') ||
+                        job?.location?.includes('Laguna')
+                    );
+                    setJobs(calabarzonJobs);
+                    // Extract unique job titles from CALABARZON jobs only
+                    const titles = [...new Set(calabarzonJobs.map(job => job?.jobTitle))].filter(Boolean);
                     setUniqueJobTitles(titles);
                 } else {
                     console.error(message);

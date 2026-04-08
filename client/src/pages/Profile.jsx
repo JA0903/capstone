@@ -24,17 +24,31 @@ export default function Profile() {
     const { formData, setFormData, handleInputChange } = useForm({
         fullname: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     });
 
     const handleSubmit = async () => {
         try {
-            const { success, message } = await editUserProfile(formData);
-            if (success) return toast.success(message);
-            setErrorMessage(message);
+            // Only send fullname and phone to the update endpoint
+            const { success, message } = await editUserProfile({
+                fullname: formData.fullname,
+                phone: formData.phone
+            });
+            if (success) {
+                // Auto-refresh user data after successful update
+                const { success: fetchSuccess, user } = await fetchUserProfile();
+                if (fetchSuccess) {
+                    setFormData(user);
+                }
+                toast.success(message);
+            } else {
+                setErrorMessage(message);
+            }
         } catch (error) {
             console.error('Error on handleSubmit:', error);
+            toast.error('Error updating profile');
         }
     }
 
