@@ -10,7 +10,8 @@
     "admin": "npm run dev --prefix admin",
     "client": "npm run dev --prefix client",
     "start": "npm run dev",
-    "seed": "node server/seed.js"
+    "seed": "node server/seedCompaniesJobs.js",
+    "seed:calabarzon": "node server/seedCompaniesJobs.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
